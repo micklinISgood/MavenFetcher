@@ -23,6 +23,7 @@ public class TweetFetch implements Runnable{
 	private Thread thread;
 	private int batchSize;
 	private List<Tweets> tweetsList;
+	private sqs q;
 
 	public Thread t;
 
@@ -44,7 +45,7 @@ public class TweetFetch implements Runnable{
 		    
 		this.batchSize = batchSize;
 		this.tweetsList = new ArrayList<Tweets>(batchSize);
-		
+		this.q = new sqs();
 		t = new Thread(this, "fetcher");
 		System.out.println("New thread: " + t);
 		t.start();
@@ -192,23 +193,25 @@ public class TweetFetch implements Runnable{
 		// } catch (IOException e1) {
 		// 	e1.printStackTrace();
 		// }
-    	  ClassLoader classLoader = getClass().getClassLoader();
-      	  File file = new File(classLoader.getResource("sentiment.py").getFile());
- 
-    	  ProcessBuilder pb = new ProcessBuilder(PYTHON_PATH,file.getPath(),done.toString());
-    	  Process p;
-		try {
-			p = pb.start();
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-	    	String o = in.readLine();
-	    	while(o !=null){
-   		  System.out.println(o);
-   		  o = in.readLine();
-	    	}
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		}
+    	  q.count();
+    	  q.put(done.toString());
+//    	  ClassLoader classLoader = getClass().getClassLoader();
+//      	  File file = new File(classLoader.getResource("sentiment.py").getFile());
+// 
+//    	  ProcessBuilder pb = new ProcessBuilder(PYTHON_PATH,file.getPath(),done.toString());
+//    	  Process p;
+//		try {
+//			p = pb.start();
+//			BufferedReader in = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//	    	String o = in.readLine();
+//	    	while(o !=null){
+//   		  System.out.println(o);
+//   		  o = in.readLine();
+//	    	}
+//		} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//		}
     	  
     }
     
