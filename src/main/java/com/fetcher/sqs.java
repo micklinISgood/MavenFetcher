@@ -14,7 +14,8 @@ import com.amazonaws.services.sqs.model.*;
 
 public class sqs {
 	AmazonSQS q;
-	String q_name;
+	String q_url;
+	String q_name ="tweet";
 	
 	public	sqs(){
 		   AWSCredentials credentials = null;
@@ -29,18 +30,29 @@ public class sqs {
 	        q = new AmazonSQSClient(credentials);
 	        Region usWest2 = Region.getRegion(Regions.US_WEST_2);
 	        q.setRegion(usWest2);
-	        CreateQueueRequest createQueueRequest = new CreateQueueRequest("tweet");
-	        q_name = q.createQueue(createQueueRequest).getQueueUrl();
-	        
+	        q_url = getQueueUrl();
+//	        System.out.println(q_url);
+	        if(q_url==null){
+		        CreateQueueRequest createQueueRequest = new CreateQueueRequest(q_name);
+		        q_url = q.createQueue(createQueueRequest).getQueueUrl();
+	        }
 		
+	}
+	private String getQueueUrl(){
+		try{
+			return q.getQueueUrl(q_name).getQueueUrl();
+		}catch(Exception e){
+//			System.out.println(e);
+			return null;
+		}
 	}
 	
 	public void put(String data){
-		q.sendMessage(new SendMessageRequest(q_name, data));
+		q.sendMessage(new SendMessageRequest(q_url, data));
 	}
 	
 	public Message get(){
-		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(q_name);
+		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(q_url);
 		List<Message> messages = q.receiveMessage(receiveMessageRequest).getMessages();
 		for (Message message : messages) {
 			return message;
@@ -48,13 +60,13 @@ public class sqs {
 		return null;
 	}
 	public void delete(String target){
-		q.deleteMessage(new DeleteMessageRequest(q_name, target));
+		q.deleteMessage(new DeleteMessageRequest(q_url, target));
 	}
 	public void delete_q(){
-		q.deleteQueue(new DeleteQueueRequest(q_name));
+		q.deleteQueue(new DeleteQueueRequest(q_url));
 	}
 	public void count(){
-		GetQueueAttributesRequest request = new GetQueueAttributesRequest(q_name);
+		GetQueueAttributesRequest request = new GetQueueAttributesRequest(q_url);
 		request.withAttributeNames("All");
 		Map<String, String> content =  q.getQueueAttributes(request).getAttributes();            
 		

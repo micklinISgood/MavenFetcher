@@ -193,8 +193,9 @@ public class TweetFetch implements Runnable{
 		// } catch (IOException e1) {
 		// 	e1.printStackTrace();
 		// }
-    	  q.count();
+    	  System.out.println(q.get().toString());
     	  q.put(done.toString());
+    	  q.count();
 //    	  ClassLoader classLoader = getClass().getClassLoader();
 //      	  File file = new File(classLoader.getResource("sentiment.py").getFile());
 // 
