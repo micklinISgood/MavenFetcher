@@ -24,6 +24,7 @@ public class TweetFetch implements Runnable{
 	private int batchSize;
 	private List<Tweets> tweetsList;
 	private sqs q;
+	private snsPublisher snsP;
 
 	public Thread t;
 
@@ -46,6 +47,7 @@ public class TweetFetch implements Runnable{
 		this.batchSize = batchSize;
 		this.tweetsList = new ArrayList<Tweets>(batchSize);
 		this.q = new sqs();
+		this.snsP = new snsPublisher();
 		t = new Thread(this, "fetcher");
 		System.out.println("New thread: " + t);
 		t.start();
@@ -193,8 +195,8 @@ public class TweetFetch implements Runnable{
 		// } catch (IOException e1) {
 		// 	e1.printStackTrace();
 		// }
-    	  System.out.println(q.get().toString());
-    	  q.put(done.toString());
+    	  //System.out.println(q.get().toString());
+    	  snsP.publish(done.toString());
     	  q.count();
 //    	  ClassLoader classLoader = getClass().getClassLoader();
 //      	  File file = new File(classLoader.getResource("sentiment.py").getFile());

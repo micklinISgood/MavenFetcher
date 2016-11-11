@@ -24,6 +24,10 @@
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk-sqs</artifactId>
   </dependency>
+  	<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk-sns</artifactId>
+  </dependency>
        <dependency>
            <groupId>org.twitter4j</groupId>
            <artifactId>twitter4j-stream</artifactId>
