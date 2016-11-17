@@ -172,10 +172,11 @@ public class TweetFetch implements Runnable{
     private void executePython(){
 
     	
-    	  JsonObject done = new JsonObject();
+    	  JsonArray done = new JsonArray();
     	  for(Tweets t : tweetsList){
     		  
     		  JsonObject line = new JsonObject();
+    		  line.addProperty("tid", t.getTweetId());
     		  line.addProperty("latitude", t.getLatitude());
     		  line.addProperty("longitude", t.getLongitude());
     		  line.addProperty("name", t.getUserName());
@@ -183,7 +184,7 @@ public class TweetFetch implements Runnable{
     		  line.addProperty("userid", t.getUserId());
     		  line.addProperty("status", t.getStatus());
     		  line.addProperty("key", t.key);
-    		  done.add(String.valueOf(t.getTweetId()), line);
+    		  done.add(line);
     	  }
     	  //System.out.println(done.toString());
   
